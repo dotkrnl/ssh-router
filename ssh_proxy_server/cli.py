@@ -13,6 +13,9 @@ from rich import print as rich_print
 
 from ssh_proxy_server.console import sshconsole
 from ssh_proxy_server.server import SSHProxyServer
+from ssh_proxy_server.forwarders.ssh import SSHForwarder
+from ssh_proxy_server.forwarders.scp import SCPForwarder
+from ssh_proxy_server.forwarders.sftp import SFTPHandlerPlugin
 
 from ssh_proxy_server.authentication import (
     Authenticator,
@@ -39,9 +42,6 @@ from ssh_proxy_server.forwarders.tunnel import (
 )
 
 from ssh_proxy_server.workarounds import dropbear
-from ssh_proxy_server.plugins.ssh.mirrorshell import SSHMirrorForwarder
-from ssh_proxy_server.plugins.scp.store_file import SCPStorageForwarder
-from ssh_proxy_server.plugins.sftp.store_file import SFTPHandlerStoragePlugin
 from ssh_proxy_server.__version__ import version as ssh_mitm_version
 from ssh_proxy_server.update import check_version
 from ssh_proxy_server.session import BaseSession, Session
@@ -97,14 +97,14 @@ def get_parser():
     parser.add_module(
         '--ssh-interface',
         dest='ssh_interface',
-        default=SSHMirrorForwarder,
+        default=SSHForwarder,
         help='interface to handle terminal sessions',
         baseclass=SSHBaseForwarder
     )
     parser.add_module(
         '--scp-interface',
         dest='scp_interface',
-        default=SCPStorageForwarder,
+        default=SCPForwarder,
         help='interface to handle scp file transfers',
         baseclass=SCPBaseForwarder
     )
@@ -118,7 +118,7 @@ def get_parser():
     parser.add_module(
         '--sftp-handler',
         dest='sftp_handler',
-        default=SFTPHandlerStoragePlugin,
+        default=SFTPHandlerPlugin,
         help='SFTP Handler to handle sftp file transfers',
         baseclass=SFTPHandlerBasePlugin
     )

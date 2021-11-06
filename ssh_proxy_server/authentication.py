@@ -110,8 +110,8 @@ class Authenticator(BaseModule):
         )
 
         plugin_group.add_argument(
-            '--hide-credentials',
-            dest='auth_hide_credentials',
+            '--show-credentials',
+            dest='auth_show_credentials',
             action='store_true',
             help='do not log credentials (usefull for presentations)'
         )
@@ -349,7 +349,7 @@ class AuthenticatorPassThrough(Authenticator):
 
         if self.session.password_provided:
             display_password = None
-            if not self.args.auth_hide_credentials:
+            if self.args.auth_show_credentials:
                 display_password = self.session.password_provided
             logmessage.append(f"\tPassword: {display_password or stylize('*******', fg('dark_gray'))}")
 
