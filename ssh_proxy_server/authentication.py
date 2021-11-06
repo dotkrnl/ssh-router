@@ -133,12 +133,15 @@ class Authenticator(BaseModule):
         self.session = session
 
     def get_remote_host_credentials(self, username, password=None, key=None):
-        remote_host = None
+        remote_host = self.args.remote_host
         remote_port = None
-        if self.args.remote_host:
-            if ':' in self.args.remote_host:
-                remote_host = self.args.remote_host[:self.args.remote_host.rfind(':')]
-                remote_port = int(self.args.remote_host[self.args.remote_host.rfind(':') + 1:])
+        if '@' in username:
+            remote_host = username[username.rfind('@') + 1:]
+            username = username[:username.rfind('@')]
+        if remote_host:
+            if ':' in remote_host:
+                remote_port = int(remote_host[remote_host.rfind(':') + 1:])
+                remote_host = remote_host[:remote_host.rfind(':')]
         if self.session.proxyserver.transparent:
             return (
                 self.args.auth_username or username,
